@@ -57,7 +57,7 @@ func NewParser(b []byte) *parser {
 	return &p
 }
 
-func (p *parser) destroy() {
+func (p *parser) Destroy() {
 	if p.event.typ != yaml_NO_EVENT {
 		yaml_event_delete(&p.event)
 	}

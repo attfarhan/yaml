@@ -99,7 +99,6 @@ type Marshaler interface {
 
 func Explore(node *Node, x []*Node) []*Node {
 	for _, child := range node.Children {
-		fmt.Println(child)
 		x = append(x, child)
 		Explore(child, x)
 	}
@@ -110,7 +109,7 @@ func Unmarshal(in []byte, out interface{}) (err error) {
 	defer handleErr(&err)
 	d := newDecoder()
 	p := NewParser(in)
-	defer p.destroy()
+	defer p.Destroy()
 	node := p.Parse()
 	if node != nil {
 		v := reflect.ValueOf(out)
