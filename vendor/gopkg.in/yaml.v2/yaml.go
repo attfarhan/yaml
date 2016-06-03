@@ -76,44 +76,12 @@ type Marshaler interface {
 // See the documentation of Marshal for the format of tags and a list of
 // supported tag options.
 //
-// func MyUnmarshal(in []byte, out interface{}) []*node {
-// 	// d := newDecoder()
-// 	p := NewParser(in)
-// 	node := p.Parse()
-// 	fmt.Println(Explore(node, out))
-// 	// if node != nil {
-// 	// 	v := reflect.ValueOf(out)
-// 	// 	if v.Kind() == reflect.Ptr && !v.IsNil() {
-// 	// 		v = v.Elem()
-// 	// 	}
-// 	// 	return node
-// 	// 	d.unmarshal(node, v)
-// 	// }
-// 	// if len(d.terrors) > 0 {
-// 	// 	return node
-// 	// }
-// 	// return node
-// 	return node
-// }
-//go:generate stringer -type=[]*Node
-
-func Explore(fileString string, node *Node, x []*Node) []*Node {
-	for _, child := range node.Children {
-		start, end := findOffset(fileString, child.Line, child.Column, child.Value)
-		child.startByte = start
-		child.endByte = end
-		x = append(x, child)
-		Explore(fileString, child, x)
-	}
-	return x
-}
-
 func Unmarshal(in []byte, out interface{}) (err error) {
 	defer handleErr(&err)
 	d := newDecoder()
-	p := NewParser(in)
-	defer p.Destroy()
-	node := p.Parse()
+	p := newParser(in)
+	defer p.destroy()
+	node := p.parse()
 	if node != nil {
 		v := reflect.ValueOf(out)
 		if v.Kind() == reflect.Ptr && !v.IsNil() {
